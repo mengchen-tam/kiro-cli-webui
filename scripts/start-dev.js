@@ -7,7 +7,7 @@ import cleanup from './cleanup-ports.js';
 const execAsync = promisify(exec);
 
 async function startDev() {
-  console.log('🚀 Starting Q Developer WebUI...\n');
+  console.log('🚀 Starting Kiro CLI WebUI...\n');
   
   // Run cleanup first
   await cleanup();

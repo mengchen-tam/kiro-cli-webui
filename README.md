@@ -1,13 +1,13 @@
-# Q Developer WebUI
+# Kiro CLI WebUI
 
-A simplified web-based UI for Amazon Q Developer CLI, focused on shell interaction, file management, and git operations.
+A simplified web-based UI for Kiro CLI, focused on shell interaction, file management, and git operations.
 
 ## Features
 
-- **Shell Integration** - Direct access to Q Developer CLI through built-in terminal
+- **Shell Integration** - Direct access to Kiro CLI through built-in terminal
 - **File Explorer** - Interactive file tree with syntax highlighting and live editing
 - **Git Operations** - View, stage and commit your changes, switch branches
-- **Project Management** - Manage multiple Q Developer projects
+- **Project Management** - Manage multiple Kiro projects
 - **Responsive Design** - Works seamlessly across desktop, tablet, and mobile
 
 ## Quick Start
@@ -15,14 +15,14 @@ A simplified web-based UI for Amazon Q Developer CLI, focused on shell interacti
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) v20 or higher
-- [Amazon Q Developer CLI](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-dev-cli.html) installed and configured
+- [Kiro CLI](https://kiro.dev) installed and configured
 
 ### Installation
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/mengchen-tam/q-dev-cli-ui.git
-cd q-dev-cli-ui
+git clone https://github.com/mengchen-tam/kiro-cli-webui.git
+cd kiro-cli-webui
 ```
 
 2. **Install dependencies:**
@@ -55,12 +55,12 @@ The application will automatically clean up any conflicting processes and start 
 ### Core Features
 
 #### Project Management
-- **Visual Project Browser** - All available Q Developer projects with metadata
+- **Visual Project Browser** - All available Kiro projects with metadata
 - **Project Actions** - Create, rename, and delete projects
 - **Smart Navigation** - Quick access to recent projects
 
 #### Shell Interface
-- **Direct CLI Access** - Use Q Developer CLI commands directly in the web interface
+- **Direct CLI Access** - Use Kiro CLI commands directly in the web interface
 - **Real-time Output** - Stream responses and see command execution in real-time
 - **Project Context** - Automatically switches to the correct project directory
 
@@ -86,15 +86,15 @@ The application will automatically clean up any conflicting processes and start 
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │   Backend       │    │  Q Developer    │
-│   (React/Vite)  │◄──►│ (Express/WS)    │◄──►│  CLI            │
+│   Frontend      │    │   Backend       │    │  Kiro CLI       │
+│   (React/Vite)  │◄──►│ (Express/WS)    │◄──►│                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
 ### Backend (Node.js + Express)
 - **Express Server** - RESTful API with static file serving
 - **WebSocket Server** - Real-time communication for shell and project updates
-- **Q Developer CLI Integration** - Process spawning and management
+- **Kiro CLI Integration** - Process spawning and management
 - **File System API** - File browser and editor functionality
 
 ### Frontend (React + Vite)
@@ -104,7 +104,7 @@ The application will automatically clean up any conflicting processes and start 
 
 ## Changes from Original
 
-This version has been simplified to focus on Q Developer CLI shell usage:
+This version has been simplified to focus on Kiro CLI shell usage:
 
 - **Removed Chat Interface** - No longer includes the chat-based interaction
 - **Shell-First Approach** - Default tab is now the shell terminal
@@ -120,17 +120,17 @@ This project is open source and free to use, modify, and distribute under the GP
 ## Acknowledgments
 
 ### Built With
-- **[Amazon Q Developer CLI](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-dev-cli.html)** - Amazon's AI-powered CLI
+- **Kiro CLI** - AI-powered development CLI
 - **[React](https://react.dev/)** - User interface library
 - **[Vite](https://vitejs.dev/)** - Fast build tool and dev server
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[CodeMirror](https://codemirror.net/)** - Advanced code editor
 
 ### Based On
-This project is based on [Claude Code UI](https://github.com/siteboon/claudecodeui) but adapted for Amazon Q Developer CLI usage.
+This project is based on [Claude Code UI](https://github.com/siteboon/claudecodeui) but adapted for Kiro CLI usage.
 
 ---
 
 <div align="center">
-  <strong>Simplified for Q Developer CLI usage.</strong>
+  <strong>Simplified for Kiro CLI usage.</strong>
 </div>

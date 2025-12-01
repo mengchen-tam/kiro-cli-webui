@@ -26,8 +26,8 @@ try {
 console.log('PORT from env:', process.env.PORT);
 
 /*
- * Q Developer WebUI - A web-based interface for Amazon Q Developer CLI
- * Copyright (C) 2024 Q Developer WebUI Contributors
+ * Kiro CLI WebUI - A web-based interface for Kiro CLI
+ * Copyright (C) 2024 Kiro CLI WebUI Contributors
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ import { validateApiKey, authenticateToken, authenticateWebSocket } from './midd
 let projectsWatcher = null;
 const connectedClients = new Set();
 
-// Setup file system watcher for Q Developer projects folder using chokidar
+// Setup file system watcher for Kiro projects folder using chokidar
 async function setupProjectsWatcher() {
   const chokidar = (await import('chokidar')).default;
   const qProjectsPath = path.join(process.env.HOME, '.q-developer', 'sessions');
@@ -281,9 +281,14 @@ app.delete('/api/projects/:projectName', authenticateToken, async (req, res) => 
 // Create project endpoint
 app.post('/api/projects/create', authenticateToken, async (req, res) => {
   try {
-    const { path: projectPath } = req.body;
+    let { path: projectPath } = req.body;
     
-    if (!projectPath || !projectPath.trim()) {
+    // Handle both string and object formats
+    if (typeof projectPath === 'object' && projectPath.path) {
+      projectPath = projectPath.path;
+    }
+    
+    if (!projectPath || typeof projectPath !== 'string' || !projectPath.trim()) {
       return res.status(400).json({ error: 'Project path is required' });
     }
     
@@ -502,10 +507,10 @@ function handleShellConnection(ws) {
         console.log('📋 Session info:', hasSession ? `Resume session ${sessionId}` : 'New session');
         
         // First send a welcome message with usage instructions
-        const welcomeMsg = `\x1b[36mQ Developer Shell started in: ${projectPath}\x1b[0m\r\n` +
-          `\x1b[32m🚀 Amazon Q Developer CLI will auto-start shortly...\x1b[0m\r\n` +
-          `\x1b[33mUsage: q chat "your message here"\x1b[0m\r\n` +
-          `\x1b[33mOr use: q chat (for interactive mode)\x1b[0m\r\n\r\n`;
+        const welcomeMsg = `\x1b[36mKiro Shell started in: ${projectPath}\x1b[0m\r\n` +
+          `\x1b[32m🚀 Kiro CLI will auto-start shortly...\x1b[0m\r\n` +
+          `\x1b[33mUsage: kiro-cli "your message here"\x1b[0m\r\n` +
+          `\x1b[33mOr use: kiro-cli (for interactive mode)\x1b[0m\r\n\r\n`;
         
         ws.send(JSON.stringify({
           type: 'output',
@@ -559,13 +564,13 @@ function handleShellConnection(ws) {
                 
                 if (hasPrompt) {
                   promptDetected = true;
-                  console.log('🎯 Shell prompt detected, auto-starting Q Developer CLI...');
+                  console.log('🎯 Shell prompt detected, auto-starting Kiro CLI...');
                   
-                  // Wait a moment for shell to be fully ready, then send q chat command
+                  // Wait a moment for shell to be fully ready, then send kiro-cli command
                   setTimeout(() => {
                     if (shellProcess && shellProcess.write) {
-                      console.log('🚀 Auto-executing: q chat');
-                      shellProcess.write('q chat\r');
+                      console.log('🚀 Auto-executing: kiro-cli');
+                      shellProcess.write('kiro-cli\r');
                       shellReady = true;
                     }
                   }, 500);
@@ -1009,7 +1014,7 @@ async function startServer() {
     console.log('✅ Database initialization skipped (testing)');
     
     server.listen(PORT, '0.0.0.0', async () => {
-      console.log(`Q Developer WebUI server running on http://0.0.0.0:${PORT}`);
+      console.log(`Kiro CLI WebUI server running on http://0.0.0.0:${PORT}`);
       
       // Start watching the projects folder for changes
       await setupProjectsWatcher(); // Re-enabled with better-sqlite3

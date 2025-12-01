@@ -361,8 +361,8 @@ function ToolsSettings({ isOpen, onClose }) {
         {/* Footer */}
         <div className="border-t border-border p-4 bg-muted/30">
           <p className="text-sm text-muted-foreground">
-            Model Context Protocol servers provide additional tools and data sources to Amazon Q Developer.
-            Configuration is stored in <code>~/.aws/amazonq/mcp.json</code>
+            Model Context Protocol servers provide additional tools and data sources to Kiro.
+            Configuration is stored in <code>~/.kiro/settings/mcp.json</code>
           </p>
         </div>
       </div>

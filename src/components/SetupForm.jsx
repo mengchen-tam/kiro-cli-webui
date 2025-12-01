@@ -52,7 +52,7 @@ const SetupForm = () => {
                 <QDeveloperLogo className="w-8 h-8 text-primary-foreground" />
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Welcome to Amazon Q Developer CLI</h1>
+            <h1 className="text-2xl font-bold text-foreground">Welcome to Kiro CLI</h1>
             <p className="text-muted-foreground mt-2">
               Set up your account to get started
             </p>

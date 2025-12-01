@@ -43,7 +43,7 @@ const LoginForm = () => {
             </div>
             <h1 className="text-2xl font-bold text-foreground">Welcome Back</h1>
             <p className="text-muted-foreground mt-2">
-              Sign in to your Amazon Q Developer CLI account
+              Sign in to your Kiro CLI account
             </p>
           </div>
 
@@ -98,7 +98,7 @@ const LoginForm = () => {
 
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
-              Enter your credentials to access Amazon Q Developer CLI
+              Enter your credentials to access Kiro CLI
             </p>
           </div>
         </div>

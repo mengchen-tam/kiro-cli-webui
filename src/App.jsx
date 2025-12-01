@@ -1,7 +1,7 @@
 /*
  * App.jsx - Main Application Component
  * 
- * Main application component for Q Developer WebUI
+ * Main application component for Kiro CLI WebUI
  * Handles project management, file operations, and shell integration
  */
 
@@ -233,7 +233,7 @@ function AppContent() {
               </code>
             </div>
             <p className="text-xs text-gray-600 dark:text-gray-400">
-              Run this command in your Q Developer WebUI directory to update to the latest version.
+              Run this command in your Kiro CLI WebUI directory to update to the latest version.
             </p>
           </div>
 

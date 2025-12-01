@@ -192,7 +192,7 @@ function Sidebar({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <QDeveloperLogo className="w-6 h-6" />
-            <h1 className="text-lg font-semibold text-foreground">Q Developer</h1>
+            <h1 className="text-lg font-semibold text-foreground">Kiro</h1>
             {updateAvailable && (
               <Badge 
                 variant="secondary" 

@@ -18,11 +18,8 @@ async function spawnQ(command, options = {}, ws) {
       skipPermissions: false
     };
     
-    // Build Q CLI command
+    // Build Kiro CLI command
     const args = [];
-    
-    // Q Developer CLI uses 'chat' command for interactive sessions
-    args.push('chat');
     
     // Add the message if provided (Q CLI expects the message as a positional argument, not --message flag)
     if (command && command.trim()) {
@@ -60,7 +57,7 @@ async function spawnQ(command, options = {}, ws) {
           tempImagePaths.push(filepath);
         }
         
-        // Include the full image paths in the prompt for Q to reference
+        // Include the full image paths in the prompt for Kiro to reference
         if (tempImagePaths.length > 0 && command && command.trim()) {
           const imageNote = `\n\n[Images provided at the following paths:]\n${tempImagePaths.map((p, i) => `${i + 1}. ${p}`).join('\n')}`;
           const modifiedCommand = command + imageNote;
@@ -73,18 +70,18 @@ async function spawnQ(command, options = {}, ws) {
         }
         
       } catch (error) {
-        console.error('Error processing images for Q:', error);
+        console.error('Error processing images for Kiro:', error);
       }
     }
     
     // Add verbose output for better debugging
     args.push('--verbose');
     
-    console.log(`🚀 Spawning Q CLI with args:`, args);
+    console.log(`🚀 Spawning Kiro CLI with args:`, args);
     console.log(`📁 Working directory: ${workingDir}`);
     
-    // Spawn the Q CLI process
-    const qProcess = spawn('q', args, {
+    // Spawn the Kiro CLI process
+    const qProcess = spawn('kiro-cli', args, {
       cwd: workingDir,
       stdio: ['pipe', 'pipe', 'pipe'],
       env: {
@@ -107,14 +104,14 @@ async function spawnQ(command, options = {}, ws) {
       const chunk = data.toString();
       outputBuffer += chunk;
       
-      console.log('Q stdout:', chunk);
+      console.log('Kiro stdout:', chunk);
       
       // Send real-time output to WebSocket
       if (ws && ws.readyState === 1) {
         try {
-          // For Q CLI, we'll send the output as streaming text
+          // For Kiro CLI, we'll send the output as streaming text
           ws.send(JSON.stringify({
-            type: 'q-output',
+            type: 'kiro-output',
             data: chunk,
             sessionId: capturedSessionId,
             timestamp: new Date().toISOString()
@@ -130,13 +127,13 @@ async function spawnQ(command, options = {}, ws) {
       const chunk = data.toString();
       errorBuffer += chunk;
       
-      console.log('Q stderr:', chunk);
+      console.log('Kiro stderr:', chunk);
       
       // Send error output to WebSocket
       if (ws && ws.readyState === 1) {
         try {
           ws.send(JSON.stringify({
-            type: 'q-error',
+            type: 'kiro-error',
             data: chunk,
             sessionId: capturedSessionId,
             timestamp: new Date().toISOString()
@@ -149,7 +146,7 @@ async function spawnQ(command, options = {}, ws) {
     
     // Handle process completion
     qProcess.on('close', (code) => {
-      console.log(`Q process exited with code ${code}`);
+      console.log(`Kiro process exited with code ${code}`);
       
       // Clean up temp images
       if (tempDir) {
@@ -167,7 +164,7 @@ async function spawnQ(command, options = {}, ws) {
       if (ws && ws.readyState === 1) {
         try {
           ws.send(JSON.stringify({
-            type: 'q-complete',
+            type: 'kiro-complete',
             sessionId: capturedSessionId,
             exitCode: code,
             timestamp: new Date().toISOString()
@@ -184,13 +181,13 @@ async function spawnQ(command, options = {}, ws) {
           sessionId: capturedSessionId
         });
       } else {
-        reject(new Error(`Q CLI exited with code ${code}: ${errorBuffer}`));
+        reject(new Error(`Kiro CLI exited with code ${code}: ${errorBuffer}`));
       }
     });
     
     // Handle process errors
     qProcess.on('error', (error) => {
-      console.error('Q process error:', error);
+      console.error('Kiro process error:', error);
       
       // Clean up temp images
       if (tempDir) {
@@ -208,7 +205,7 @@ async function spawnQ(command, options = {}, ws) {
       if (ws && ws.readyState === 1) {
         try {
           ws.send(JSON.stringify({
-            type: 'q-error',
+            type: 'kiro-error',
             error: error.message,
             sessionId: capturedSessionId,
             timestamp: new Date().toISOString()
@@ -226,7 +223,7 @@ async function spawnQ(command, options = {}, ws) {
       try {
         ws.send(JSON.stringify({
           type: 'session-created',
-          sessionId: capturedSessionId || `q-session-${Date.now()}`,
+          sessionId: capturedSessionId || `kiro-session-${Date.now()}`,
           timestamp: new Date().toISOString()
         }));
         sessionCreatedSent = true;
@@ -238,7 +235,7 @@ async function spawnQ(command, options = {}, ws) {
 }
 
 async function abortQSession(sessionId) {
-  console.log(`🛑 Attempting to abort Q session: ${sessionId}`);
+  console.log(`🛑 Attempting to abort Kiro session: ${sessionId}`);
   
   const qProcess = activeQProcesses.get(sessionId);
   if (qProcess && !qProcess.killed) {
@@ -249,27 +246,27 @@ async function abortQSession(sessionId) {
       // Force kill after 5 seconds if still running
       setTimeout(() => {
         if (!qProcess.killed) {
-          console.log(`🔪 Force killing Q session: ${sessionId}`);
+          console.log(`🔪 Force killing Kiro session: ${sessionId}`);
           qProcess.kill('SIGKILL');
         }
       }, 5000);
       
       activeQProcesses.delete(sessionId);
-      console.log(`✅ Q session aborted: ${sessionId}`);
+      console.log(`✅ Kiro session aborted: ${sessionId}`);
       return true;
     } catch (error) {
-      console.error(`❌ Error aborting Q session ${sessionId}:`, error);
+      console.error(`❌ Error aborting Kiro session ${sessionId}:`, error);
       return false;
     }
   } else {
-    console.log(`⚠️ No active Q process found for session: ${sessionId}`);
+    console.log(`⚠️ No active Kiro process found for session: ${sessionId}`);
     return false;
   }
 }
 
 // Clean up all active processes on server shutdown
 process.on('SIGINT', () => {
-  console.log('🛑 Shutting down Q CLI processes...');
+  console.log('🛑 Shutting down Kiro CLI processes...');
   for (const [sessionId, qProcess] of activeQProcesses) {
     if (!qProcess.killed) {
       qProcess.kill('SIGTERM');
@@ -280,7 +277,7 @@ process.on('SIGINT', () => {
 });
 
 process.on('SIGTERM', () => {
-  console.log('🛑 Shutting down Q CLI processes...');
+  console.log('🛑 Shutting down Kiro CLI processes...');
   for (const [sessionId, qProcess] of activeQProcesses) {
     if (!qProcess.killed) {
       qProcess.kill('SIGTERM');

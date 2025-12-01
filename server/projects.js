@@ -14,9 +14,9 @@ function clearProjectDirectoryCache() {
   cacheTimestamp = Date.now();
 }
 
-// Load project configuration file for Q Developer
+// Load project configuration file for Kiro
 async function loadProjectConfig() {
-  const configPath = path.join(process.env.HOME, '.q-developer', 'project-config.json');
+  const configPath = path.join(process.env.HOME, '.kiro', 'project-config.json');
   try {
     const configData = await fs.readFile(configPath, 'utf8');
     return JSON.parse(configData);
@@ -26,9 +26,9 @@ async function loadProjectConfig() {
   }
 }
 
-// Save project configuration file for Q Developer
+// Save project configuration file for Kiro
 async function saveProjectConfig(config) {
-  const configDir = path.join(process.env.HOME, '.q-developer');
+  const configDir = path.join(process.env.HOME, '.kiro');
   const configPath = path.join(configDir, 'project-config.json');
   
   // Ensure directory exists
@@ -81,7 +81,7 @@ async function generateDisplayName(projectName, actualProjectDir = null) {
   return path.basename(projectPath);
 }
 
-// Get Q Developer projects by scanning common project directories
+// Get Kiro projects by scanning common project directories
 async function getProjects() {
   try {
     const projects = [];
@@ -97,13 +97,40 @@ async function getProjects() {
       os.homedir() // Also scan home directory for immediate subdirectories
     ];
     
-    // Add manually configured project directories
-    if (config.additionalProjectDirs) {
-      projectDirs.push(...config.additionalProjectDirs);
-    }
-    
     const foundProjects = new Set();
     
+    // First, add manually configured projects directly (not as parent dirs to scan)
+    if (config.additionalProjectDirs) {
+      for (const projectPath of config.additionalProjectDirs) {
+        try {
+          const exists = await fs.access(projectPath).then(() => true).catch(() => false);
+          if (exists && !foundProjects.has(projectPath)) {
+            foundProjects.add(projectPath);
+            
+            const projectName = path.basename(projectPath);
+            const displayName = await generateDisplayName(projectName, projectPath);
+            const sessions = await getSessionsForProject(projectPath);
+            
+            projects.push({
+              name: projectName,
+              displayName: displayName,
+              fullPath: projectPath,
+              sessionMeta: {
+                total: sessions.length,
+                lastActivity: sessions.length > 0 ? 
+                  Math.max(...sessions.map(s => new Date(s.updated_at || s.created_at).getTime())) : 
+                  null
+              },
+              sessions: sessions
+            });
+          }
+        } catch (error) {
+          console.error(`Error adding manual project ${projectPath}:`, error);
+        }
+      }
+    }
+    
+    // Then scan common project directories
     for (const baseDir of projectDirs) {
       try {
         const exists = await fs.access(baseDir).then(() => true).catch(() => false);
@@ -158,7 +185,7 @@ async function getProjects() {
     
     return projects;
   } catch (error) {
-    console.error('Error getting Q Developer projects:', error);
+    console.error('Error getting Kiro projects:', error);
     return [];
   }
 }
@@ -192,7 +219,7 @@ async function isProjectDirectory(dirPath) {
   }
 }
 
-// Get sessions for a specific project (Q Developer doesn't have built-in session management like Claude)
+// Get sessions for a specific project (Kiro doesn't have built-in session management like Claude)
 // We'll create a simple session tracking system
 async function getSessionsForProject(projectPath) {
   try {
@@ -350,7 +377,7 @@ async function addMessageToSession(sessionId, message) {
 
 // Rename a project
 async function renameProject(oldName, newName) {
-  // For Q Developer, we'll update the display name in config
+  // For Kiro, we'll update the display name in config
   const config = await loadProjectConfig();
   
   if (!config.projectDisplayNames) {
@@ -440,21 +467,37 @@ async function addProjectManually(projectPath) {
       config.additionalProjectDirs = [];
     }
     
-    if (!config.additionalProjectDirs.includes(projectPath)) {
-      config.additionalProjectDirs.push(projectPath);
-      await saveProjectConfig(config);
+    // Convert to absolute path if relative
+    let absolutePath = projectPath;
+    if (!path.isAbsolute(projectPath)) {
+      absolutePath = path.resolve(os.homedir(), projectPath);
     }
     
-    return true;
+    // Create directory if it doesn't exist
+    try {
+      await fs.mkdir(absolutePath, { recursive: true });
+      console.log(`✅ Created project directory: ${absolutePath}`);
+    } catch (error) {
+      console.error(`Error creating directory ${absolutePath}:`, error);
+      throw new Error(`Failed to create project directory: ${error.message}`);
+    }
+    
+    if (!config.additionalProjectDirs.includes(absolutePath)) {
+      config.additionalProjectDirs.push(absolutePath);
+      await saveProjectConfig(config);
+      console.log(`✅ Added project to config: ${absolutePath}`);
+    }
+    
+    return { path: absolutePath, name: path.basename(absolutePath) };
   } catch (error) {
     console.error('Error adding project manually:', error);
-    return false;
+    throw error;
   }
 }
 
 // Extract project directory (for compatibility with existing code)
 async function extractProjectDirectory(projectName) {
-  // For Q Developer, project name is typically the directory name
+  // For Kiro, project name is typically the directory name
   const projects = await getProjects();
   const project = projects.find(p => p.name === projectName);
   return project ? project.fullPath : null;

@@ -1,7 +1,7 @@
 /*
  * MainContent.jsx - Main Content Area
  * 
- * Main content area component for Q Developer WebUI
+ * Main content area component for Kiro CLI WebUI
  * Handles shell, file explorer, and git panel tabs
  */
 
@@ -76,7 +76,7 @@ function MainContent({
             ) : (
               <div>
                 <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
-                  Q Developer WebUI
+                  Kiro CLI WebUI
                 </h2>
                 <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
                   Select a project to get started
