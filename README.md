@@ -48,7 +48,7 @@ npm run start-dev
 npm run cleanup
 ```
 
-The application will automatically clean up any conflicting processes and start at the port specified in your .env file (default: http://localhost:3001)
+The application will automatically clean up any conflicting processes and start at the port specified in your .env file (default: http://localhost:3009)
 
 ## Usage
 
