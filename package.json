@@ -1,7 +1,7 @@
 {
-  "name": "q-developer-webui",
+  "name": "kiro-cli-webui",
   "version": "1.0.0",
-  "description": "A web-based UI for Amazon Q Developer CLI",
+  "description": "A web-based UI for Kiro CLI",
   "type": "module",
   "main": "server/index.js",
   "scripts": {
@@ -16,14 +16,14 @@
     "cleanup": "node scripts/cleanup-ports.js"
   },
   "keywords": [
-    "amazon-q",
-    "q-developer",
+    "kiro",
+    "kiro-cli",
     "ai",
     "code",
     "ui",
     "assistant"
   ],
-  "author": "Q Developer WebUI Contributors",
+  "author": "Kiro CLI WebUI Contributors",
   "license": "GPL-3.0",
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",

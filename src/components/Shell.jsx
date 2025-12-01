@@ -399,9 +399,9 @@ function Shell({ selectedProject, selectedSession, isActive }) {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       let wsBaseUrl;
       
-      // For development: Vite runs on 3000, API server on 3001
-      if (window.location.port === '3000') {
-        wsBaseUrl = `${protocol}//${window.location.hostname}:3001`;
+      // For development: Vite runs on 3009, API server on 3008
+      if (window.location.port === '3009') {
+        wsBaseUrl = `${protocol}//${window.location.hostname}:3008`;
       } else {
         // For production or other configurations, use same host and port
         wsBaseUrl = `${protocol}//${window.location.host}`;
